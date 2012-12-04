@@ -142,19 +142,19 @@ public class CrossroadsGUI extends SimpleMoveFrame {
         
         pedestrianLightNS_2 = new PedestrianLightImage(LightImage.ScaleType.SMALL_SIZE, LightImage.Rotate.A_QUARTER);
         containerPanel.add(pedestrianLightNS_2);
-        pedestrianLightNS_2.setBounds(145, 120, pedestrianLightNS_2.getWidth(), pedestrianLightNS_2.getHeight());
+        pedestrianLightNS_2.setBounds(333, 120, pedestrianLightNS_2.getWidth(), pedestrianLightNS_2.getHeight());
 
         pedestrianLightSN_2 = new PedestrianLightImage(LightImage.ScaleType.SMALL_SIZE, LightImage.Rotate.THREE_QUARTER);
         containerPanel.add(pedestrianLightSN_2);
-        pedestrianLightSN_2.setBounds(333, 366, pedestrianLightSN_2.getWidth(), pedestrianLightSN_2.getHeight());
+        pedestrianLightSN_2.setBounds(145, 366, pedestrianLightSN_2.getWidth(), pedestrianLightSN_2.getHeight());
 
         pedestrianLightWE_2 = new PedestrianLightImage(LightImage.ScaleType.SMALL_SIZE, LightImage.Rotate.NONE);
         containerPanel.add(pedestrianLightWE_2);
-        pedestrianLightWE_2.setBounds(117, 326, pedestrianLightWE_2.getWidth(), pedestrianLightWE_2.getHeight());
+        pedestrianLightWE_2.setBounds(117, 144, pedestrianLightWE_2.getWidth(), pedestrianLightWE_2.getHeight());
 
         pedestrianLightEW_2 = new PedestrianLightImage(LightImage.ScaleType.SMALL_SIZE, LightImage.Rotate.UPSIDE_DOWN);
         containerPanel.add(pedestrianLightEW_2);
-        pedestrianLightEW_2.setBounds(366, 144, pedestrianLightEW_2.getWidth(), pedestrianLightEW_2.getHeight());
+        pedestrianLightEW_2.setBounds(366, 326, pedestrianLightEW_2.getWidth(), pedestrianLightEW_2.getHeight());
     }
 
     private void refresh() {
@@ -215,6 +215,8 @@ public class CrossroadsGUI extends SimpleMoveFrame {
     private void updatePedestrianLights(Axe axe) {
         PedestrianLightImage light1 = null;
         PedestrianLightImage light2 = null;
+        PedestrianLightImage light3 = null;
+        PedestrianLightImage light4 = null;
         LightState state = crossroads.getPedestrianLight(axe).getState();
 
         if (state == LightState.BLINKING_GREEN) {
@@ -226,9 +228,9 @@ public class CrossroadsGUI extends SimpleMoveFrame {
         
         
         if ((isNSAxeInIntermediateState && axe == Axe.NS_SN) || (!isNSAxeInIntermediateState && axe == Axe.EW_WE)
-                && isBlinkingAndGreen == true) {
-            blinkingGreenTimer.stop();
+                && blinkingGreenTimer.isRunning()) {
             isNSAxeInIntermediateState = !isNSAxeInIntermediateState;
+            blinkingGreenTimer.stop();
         }
         
         
@@ -236,10 +238,14 @@ public class CrossroadsGUI extends SimpleMoveFrame {
             case NS_SN:
                 light1 = pedestrianLightNS_1;
                 light2 = pedestrianLightSN_1;
+                light3 = pedestrianLightNS_2;
+                light4 = pedestrianLightSN_2;
                 break;
             case EW_WE:
                 light1 = pedestrianLightWE_1;
                 light2 = pedestrianLightEW_1;
+                light3 = pedestrianLightWE_2;
+                light4 = pedestrianLightEW_2;
                 break;
         }
 
@@ -247,15 +253,21 @@ public class CrossroadsGUI extends SimpleMoveFrame {
             case OFF:
                 light1.toOff();
                 light2.toOff();
+                light3.toOff();
+                light4.toOff();
                 break;
             case GREEN:
                 light1.toGreen();
                 light2.toGreen();
+                light3.toGreen();
+                light4.toGreen();
                 break;
             case PAUSE:
             case RED:
                 light1.toRed();
                 light2.toRed();
+                light3.toRed();
+                light4.toRed();
                 break;
         }
     }
@@ -281,25 +293,35 @@ public class CrossroadsGUI extends SimpleMoveFrame {
     private void blinkingGreen() {
         PedestrianLightImage light1;
         PedestrianLightImage light2;
+        PedestrianLightImage light3;
+        PedestrianLightImage light4;
 
         if (isNSAxeInIntermediateState) {
             //the NS_SN lights are in this state
             light1 = pedestrianLightNS_1;
             light2 = pedestrianLightSN_1;
+            light3 = pedestrianLightNS_2;
+            light4 = pedestrianLightSN_2;
         } else {
             //the WE_EW lights are in this state
             light1 = pedestrianLightWE_1;
             light2 = pedestrianLightEW_1;
+            light3 = pedestrianLightWE_2;
+            light4 = pedestrianLightEW_2;
         }
 
         if (isBlinkingAndGreen) {
             //go off
             light1.toOff();
             light2.toOff();
+            light3.toOff();
+            light4.toOff();
         } else {
             //go green
             light1.toGreen();
             light2.toGreen();
+            light3.toGreen();
+            light4.toGreen();
         }
 
         isBlinkingAndGreen = !isBlinkingAndGreen;

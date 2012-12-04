@@ -10,7 +10,6 @@ import g34871.alg3g.rmi.common.exception.NotInIntervalException;
 import g34871.alg3g.rmi.common.light.LightParameters;
 import g34871.alg3g.rmi.server.Crossroads;
 import g34871.alg3g.rmi.view.CrossroadsGUI;
-import g34871.alg3g.rmi.view.NewJFrame;
 import g34871.alg3g.rmi.view.PedestrianLightGUI;
 import g34871.alg3g.rmi.view.TrafficLightGUI;
 import java.awt.HeadlessException;
@@ -29,7 +28,7 @@ public class Main {
      */
     public static void main(String[] args) {
         try {
-            LightParameters lp = new LightParameters(2000, 1000, 2000, 1000, 500, 300);
+            LightParameters lp = new LightParameters(4000, 3000, 5000, 1000, 500, 300);
             CrossroadsParameters cp = new CrossroadsParameters(lp);
             Crossroads crossr = new Crossroads(cp);
             
@@ -48,7 +47,6 @@ public class Main {
             pd_lgt_ns.setLocation(150, 440);
             pd_lgt_we.setLocation(270, 440);
             
-            new NewJFrame(crossr).setVisible(true);
             new CrossroadsGUI("Carrefour", crossr).setVisible(true);
         } catch (HeadlessException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
