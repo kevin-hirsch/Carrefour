@@ -34,7 +34,7 @@ public class LightParameters {
     public LightParameters(int redLightTime, int orangeLightTime, 
             int greenLightTime, int pauseTime, int blinkingTimer, 
             int greenBlinkingTimer) throws NotInIntervalException {
-        this.redLightTime = new Interval(1000, 150000);
+        this.redLightTime = new Interval(1000, 15000);
         this.orangeLightTime = new Interval(1000, 5000);
         this.greenLightTime = new Interval(1000, 15000);
         this.pauseTime = new Interval(500, 5000);

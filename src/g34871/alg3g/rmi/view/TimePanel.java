@@ -62,7 +62,7 @@ public class TimePanel extends JPanel {
         slider.setPaintLabels(true);
         slider.setPaintTicks(true);
         slider.setSnapToTicks(true);
-        slider.setPreferredSize(new Dimension(350, 60));
+        slider.setPreferredSize(new Dimension(350, 50));
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;

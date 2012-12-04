@@ -28,6 +28,10 @@ public class AdministratorGUI extends JFrame {
     private JPanel container;
     private JPanel timeParamsPanel;
     private TimePanel greenTimePanel;
+    private TimePanel orangeTimePanel;
+    private TimePanel redTimePanel;
+    private TimePanel pauseTimePanel;
+    private TimePanel blinkingTimePanel;
 
     public AdministratorGUI(Crossroads crossroads) {
         super("Administration");
@@ -54,11 +58,23 @@ public class AdministratorGUI extends JFrame {
 
     private void initTimePanels() {
         LightParameters lp = crossroads.getParameters().getLightParams();
-        Interval greenTime = lp.getGreenLightTime();
-        greenTimePanel = new TimePanel("Feu Vert", "images/green_light.png",
-                greenTime.getMin() / 1000, greenTime.getMax() / 1000, greenTime.getCurrentValue() / 1000, 1);
+        Interval intervalTime = lp.getGreenLightTime();
+        greenTimePanel = new TimePanel("Feu Vert (s)", "images/green_light.png",
+                intervalTime.getMin() / 1000, intervalTime.getMax() / 1000, intervalTime.getCurrentValue() / 1000, 1);
 
         timeParamsPanel.add(greenTimePanel);
+        
+        intervalTime = lp.getOrangeLightTime();
+        orangeTimePanel = new TimePanel("Feu Orange (ms)", "images/orange_light.png",
+                intervalTime.getMin(), intervalTime.getMax(), intervalTime.getCurrentValue(), 1000);
+
+        timeParamsPanel.add(orangeTimePanel);
+        
+        intervalTime = lp.getRedLightTime();
+        redTimePanel = new TimePanel("Feu Rouge (s)", "images/red_light.png",
+                intervalTime.getMin() / 1000, intervalTime.getMax() / 1000, intervalTime.getCurrentValue() / 1000, 1);
+
+        timeParamsPanel.add(redTimePanel);
     }
 
     public static void main(String[] args) {
