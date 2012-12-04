@@ -38,6 +38,7 @@ public class Crossroads implements CrossroadsInterface {
     public static final String PEDESTRIAN_LIGHTS_WE_CHANGED = "pedestrian lights west-est changed";
     private boolean hasNSChanged;
     private boolean hasWEChanged;
+    private boolean isOffService;
 
     public Crossroads(CrossroadsParameters params) {
         this.params = params;
@@ -46,6 +47,7 @@ public class Crossroads implements CrossroadsInterface {
         this.hasHandNSAxe = true;
         this.hasNSChanged = false;
         this.hasWEChanged = false;
+        this.isOffService = false;
 
         initLights();
         initTimers();
@@ -79,6 +81,21 @@ public class Crossroads implements CrossroadsInterface {
         if (trafficTimer.getInitialDelay() != 0) {
             //on a changé le délai, on le reset
             trafficTimer.setInitialDelay(0);
+        }
+
+        if (isOffService) {
+            trafficLightNSAxe.goOffService();
+            trafficLightWEAxe.goOffService();
+            pedestrianLightNSAxe.goOffService();
+            pedestrianLightWEAxe.goOffService();
+            hasNSChanged = true;
+            hasWEChanged = true;
+            fireProperties(previousState);
+            trafficTimer.stop();
+            return;
+        } else if (!trafficTimer.isRunning()) {
+            previousState = LightState.GREEN;
+            trafficTimer.start();
         }
 
         switch (previousState) {
@@ -124,16 +141,22 @@ public class Crossroads implements CrossroadsInterface {
                 hasWEChanged = true;
                 timeInterval = params.getLightParams().getGreenLightTime();
                 break;
-            case BLINKING_ORANGE: //blinking orange --> continue to blink
-                if (!hasNSChanged) {
-                    hasNSChanged = true;
-                    hasWEChanged = true;
-                }
-                timeInterval = params.getLightParams().getBlinkingTime();
-                break;
         }
 
         restartWithInterval(trafficTimer, timeInterval);
+        fireProperties(previousState);
+    }
+
+    private void restartWithInterval(Timer lightTimer, Interval currentValue) {
+        restartWithDelay(lightTimer, currentValue.getCurrentValue());
+    }
+
+    private void restartWithDelay(Timer lightTimer, int currentValue) {
+        lightTimer.setDelay(currentValue);
+        lightTimer.restart();
+    }
+
+    private void fireProperties(LightState previousState) {
         propertyChange.firePropertyChange(TRAFFIC_LIGHTS_CHANGED, previousState,
                 ((hasHandNSAxe) ? trafficLightNSAxe.getState() : trafficLightWEAxe.getState()));
         if (hasNSChanged) {
@@ -150,29 +173,31 @@ public class Crossroads implements CrossroadsInterface {
         }
     }
 
-    private void restartWithInterval(Timer lightTimer, Interval currentValue) {
-        restartWithDelay(lightTimer, currentValue.getCurrentValue());
-    }
-
-    private void restartWithDelay(Timer lightTimer, int currentValue) {
-        lightTimer.setDelay(currentValue);
-        lightTimer.restart();
-    }
-
     @Override
     public void putOffService() {
-        trafficLightNSAxe.goOffService();
-        trafficLightWEAxe.goOffService();
-        pedestrianLightNSAxe.goOffService();
-        pedestrianLightWEAxe.goOffService();
+        if (isOffService) {
+            //already off service !
+            return;
+        }
+
+        isOffService = true;
         updateTrafficLights();
     }
 
     @Override
     public void rebootService() {
-        trafficLightNSAxe.goIntermediate();
-        trafficLightWEAxe.goIntermediate();
+        if (!isOffService) {
+            //already in service !
+            return;
+        }
+
+        isOffService = false;
         updateTrafficLights();
+    }
+
+    @Override
+    public boolean isOffService() {
+        return isOffService;
     }
 
     @Override

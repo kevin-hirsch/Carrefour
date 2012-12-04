@@ -8,17 +8,13 @@ import g34871.alg3g.rmi.common.crossroads.Axe;
 import g34871.alg3g.rmi.common.light.LightState;
 import g34871.alg3g.rmi.server.Crossroads;
 import g34871.alg3g.rmi.view.image.LightImage;
-import g34871.alg3g.rmi.view.image.PedestrianLightImage;
 import g34871.alg3g.rmi.view.image.TrafficLightImage;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
 import java.io.IOException;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.Timer;
 
 /**
@@ -60,12 +56,12 @@ public class TrafficLightGUI extends LightGUI {
     @Override
     protected void refresh(LightState state) {
         if (state == LightState.BLINKING_ORANGE) {
-            System.out.println("bo");
             if (!isBlinkingAndOrange) {
                 isBlinkingAndOrange = true;
                 blinkingTimer.start();
             }
         } else {
+            isBlinkingAndOrange = false;
             blinkingTimer.stop();
 
             switch (state) {
@@ -87,7 +83,6 @@ public class TrafficLightGUI extends LightGUI {
     }
 
     private void blinkingOrange() {
-        System.out.println("e");
         if (isBlinkingAndOrange) {
             //go off
             image.toOff();

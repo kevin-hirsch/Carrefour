@@ -15,6 +15,7 @@ public interface CrossroadsInterface {
     public double getSpeedRate();
     public void putOffService();
     public void rebootService();
+    public boolean isOffService();
     public boolean pedestrianButtonPushed(Axe axe);
     public LightInterface getTrafficLight(Axe axe);
     public LightInterface getPedestrianLight(Axe axe);

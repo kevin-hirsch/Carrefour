@@ -13,7 +13,7 @@ import g34871.alg3g.rmi.server.Crossroads;
 public class NewJFrame extends javax.swing.JFrame {
 
     private Crossroads crossroads;
-    
+
     /**
      * Creates new form NewJFrame
      */
@@ -46,26 +46,29 @@ public class NewJFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(161, Short.MAX_VALUE)
+            .add(layout.createSequentialGroup()
+                .add(50, 50, 50)
                 .add(jButton1)
-                .add(142, 142, 142))
+                .addContainerGap(253, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(140, Short.MAX_VALUE)
+            .add(layout.createSequentialGroup()
+                .add(54, 54, 54)
                 .add(jButton1)
-                .add(131, 131, 131))
+                .addContainerGap(217, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        crossroads.putOffService();
+        if (!crossroads.isOffService()) {
+            crossroads.putOffService();
+        } else {
+            crossroads.rebootService();
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     // End of variables declaration//GEN-END:variables

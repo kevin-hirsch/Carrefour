@@ -4,8 +4,8 @@
  */
 package g34871.alg3g.rmi.server;
 
-import g34871.alg3g.rmi.common.light.AbstractLight;
 import g34871.alg3g.rmi.common.crossroads.Axe;
+import g34871.alg3g.rmi.common.light.AbstractLight;
 import g34871.alg3g.rmi.common.light.LightState;
 
 /**
