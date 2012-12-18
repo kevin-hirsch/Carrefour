@@ -2,14 +2,14 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package g34871.alg3g.rmi.server;
+package g34871.alg3g.rmi.project.server;
 
-import g34871.alg3g.rmi.common.crossroads.Axe;
-import g34871.alg3g.rmi.common.crossroads.CrossroadsInterface;
-import g34871.alg3g.rmi.common.crossroads.CrossroadsParameters;
-import g34871.alg3g.rmi.common.light.LightInterface;
-import g34871.alg3g.rmi.common.light.LightState;
-import g34871.alg3g.rmi.common.utils.Interval;
+import g34871.alg3g.rmi.project.common.crossroads.Axe;
+import g34871.alg3g.rmi.project.common.crossroads.CrossroadsInterface;
+import g34871.alg3g.rmi.project.common.crossroads.CrossroadsParameters;
+import g34871.alg3g.rmi.project.common.light.LightInterface;
+import g34871.alg3g.rmi.project.common.light.LightState;
+import g34871.alg3g.rmi.project.common.utils.Interval;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
@@ -76,7 +76,10 @@ public class Crossroads implements CrossroadsInterface {
 
     private void updateTrafficLights() {
         Interval timeInterval = null;
-        LightState previousState = ((hasHandNSAxe) ? trafficLightNSAxe.getState() : trafficLightWEAxe.getState());
+        LightState trafficPreviousState = ((hasHandNSAxe) ? 
+                trafficLightNSAxe.getState() : trafficLightWEAxe.getState());
+        LightState pedestrianPreviousState = ((hasHandNSAxe) ? 
+                pedestrianLightWEAxe.getState() : pedestrianLightNSAxe.getState());
 
         if (trafficTimer.getInitialDelay() != 0) {
             //on a changé le délai, on le reset
@@ -90,15 +93,62 @@ public class Crossroads implements CrossroadsInterface {
             pedestrianLightWEAxe.goOffService();
             hasNSChanged = true;
             hasWEChanged = true;
-            fireProperties(previousState);
+            fireProperties(trafficPreviousState);
             trafficTimer.stop();
             return;
         } else if (!trafficTimer.isRunning()) {
-            previousState = LightState.GREEN;
+            trafficPreviousState = LightState.GREEN;
             trafficTimer.start();
         }
 
-        switch (previousState) {
+        if (pedestrianPreviousState == LightState.GREEN) {
+            if (hasHandNSAxe) {
+                pedestrianLightWEAxe.goIntermediate();
+                trafficLightNSAxe.goGreen();
+            } else {
+                pedestrianLightNSAxe.goIntermediate();
+                trafficLightWEAxe.goGreen();
+            }
+        } else if (pedestrianPreviousState == LightState.BLINKING_GREEN) {
+            if (hasHandNSAxe) {
+                pedestrianLightWEAxe.goRed();
+                trafficLightNSAxe.goIntermediate();
+            } else {
+                pedestrianLightNSAxe.goRed();
+                trafficLightWEAxe.goIntermediate();
+            }
+        } else if (trafficPreviousState == LightState.ORANGE) {
+            if (hasHandNSAxe) {
+                trafficLightNSAxe.goPause();
+                pedestrianLightWEAxe.goRed();
+            } else {
+                trafficLightWEAxe.goPause();
+                pedestrianLightNSAxe.goRed();
+            }
+            
+            hasHandNSAxe = !hasHandNSAxe;
+        } else if (trafficPreviousState == LightState.PAUSE) {
+            if (hasHandNSAxe) {
+                trafficLightNSAxe.goGreen();
+                pedestrianLightWEAxe.goRed();
+            } else {
+                trafficLightWEAxe.goGreen();
+                pedestrianLightNSAxe.goRed();
+            }
+            
+            //timer = timer pause piéton - timer pause feu (déja passé)
+        } else if (pedestrianPreviousState == LightState.RED) {
+            if (hasHandNSAxe) {
+                pedestrianLightWEAxe.goGreen();
+                trafficLightNSAxe.goGreen();
+            } else {
+                pedestrianLightNSAxe.goGreen();
+                trafficLightWEAxe.goGreen();
+            }
+        }
+        
+        /*
+        switch (trafficPreviousState) {
             case GREEN: //end of green --> to orange
                 if (hasHandNSAxe) {
                     trafficLightNSAxe.goIntermediate();
@@ -111,7 +161,7 @@ public class Crossroads implements CrossroadsInterface {
                     hasNSChanged = false;
                     hasWEChanged = true;
                 }
-                timeInterval = params.getLightParams().getOrangeLightTime();
+                timeInterval = params.getLightParams().getTrOrangeTime();
                 break;
             case OFF:
             case ORANGE: //end of orange --> to pause
@@ -139,12 +189,12 @@ public class Crossroads implements CrossroadsInterface {
                 }
                 hasNSChanged = true;
                 hasWEChanged = true;
-                timeInterval = params.getLightParams().getGreenLightTime();
+                timeInterval = params.getLightParams().getTrGreenTime();
                 break;
-        }
+        }*/
 
         restartWithInterval(trafficTimer, timeInterval);
-        fireProperties(previousState);
+        fireProperties(trafficPreviousState);
     }
 
     private void restartWithInterval(Timer lightTimer, Interval currentValue) {
@@ -185,7 +235,7 @@ public class Crossroads implements CrossroadsInterface {
     }
 
     @Override
-    public void rebootService() {
+    public void restoreService() {
         if (!isOffService) {
             //already in service !
             return;
@@ -213,7 +263,7 @@ public class Crossroads implements CrossroadsInterface {
     @Override
     public boolean pedestrianButtonPushed(Axe axe) {
         if (getTrafficLight(axe).getState() == LightState.GREEN) {
-            trafficTimer.setInitialDelay(params.getLightParams().getGreenLightTime().getMin());
+            trafficTimer.setInitialDelay(params.getLightParams().getTrGreenTime().getMin());
             trafficTimer.restart();
             return true;
         } else {

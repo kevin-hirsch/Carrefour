@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package g34871.alg3g.rmi.view.image;
+package g34871.alg3g.rmi.project.view.image;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

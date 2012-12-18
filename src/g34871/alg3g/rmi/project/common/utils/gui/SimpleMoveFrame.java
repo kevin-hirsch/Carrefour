@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package g34871.alg3g.rmi.common.utils.gui;
+package g34871.alg3g.rmi.project.common.utils.gui;
 
 import java.awt.Cursor;
 import java.awt.HeadlessException;

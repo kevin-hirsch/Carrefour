@@ -2,11 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package g34871.alg3g.rmi.server;
+package g34871.alg3g.rmi.project.server;
 
-import g34871.alg3g.rmi.common.crossroads.Axe;
-import g34871.alg3g.rmi.common.light.AbstractLight;
-import g34871.alg3g.rmi.common.light.LightState;
+import g34871.alg3g.rmi.project.common.crossroads.Axe;
+import g34871.alg3g.rmi.project.common.light.AbstractLight;
+import g34871.alg3g.rmi.project.common.light.LightState;
 
 /**
  *

@@ -2,15 +2,15 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package g34871.alg3g.rmi.view;
+package g34871.alg3g.rmi.project.view;
 
-import g34871.alg3g.rmi.common.crossroads.Axe;
-import g34871.alg3g.rmi.common.light.LightState;
-import g34871.alg3g.rmi.common.utils.gui.SimpleMoveFrame;
-import g34871.alg3g.rmi.server.Crossroads;
-import g34871.alg3g.rmi.view.image.LightImage;
-import g34871.alg3g.rmi.view.image.PedestrianLightImage;
-import g34871.alg3g.rmi.view.image.TrafficLightImage;
+import g34871.alg3g.rmi.project.common.crossroads.Axe;
+import g34871.alg3g.rmi.project.common.light.LightState;
+import g34871.alg3g.rmi.project.common.utils.gui.SimpleMoveFrame;
+import g34871.alg3g.rmi.project.server.Crossroads;
+import g34871.alg3g.rmi.project.view.image.LightImage;
+import g34871.alg3g.rmi.project.view.image.PedestrianLightImage;
+import g34871.alg3g.rmi.project.view.image.TrafficLightImage;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
@@ -43,8 +43,8 @@ public class CrossroadsGUI extends SimpleMoveFrame {
     private PedestrianLightImage pedestrianLightWE_2;
     private PedestrianLightImage pedestrianLightEW_2;
     private Crossroads crossroads;
-    private Timer blinkingGreenTimer;
-    private Timer blinkingTimer;
+    private Timer blinkingPdGreenTimer;
+    private Timer blinkingTrOrangeTimer;
     private boolean isBlinkingAndOrange;
     private boolean isBlinkingAndGreen;
     private boolean isNSAxeInIntermediateState;
@@ -66,7 +66,7 @@ public class CrossroadsGUI extends SimpleMoveFrame {
         this.setUndecorated(true);
         containerPanel = (JPanel) this.getContentPane();
 
-        blinkingTimer = new Timer(crossroads.getParameters().getLightParams().getBlinkingTime().getCurrentValue(),
+        blinkingTrOrangeTimer = new Timer(crossroads.getParameters().getLightParams().getTrBlinkingTime().getCurrentValue(),
                 new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent ae) {
@@ -74,7 +74,7 @@ public class CrossroadsGUI extends SimpleMoveFrame {
                     }
                 });
 
-        blinkingGreenTimer = new Timer(crossroads.getParameters().getLightParams().getGreenBlinkingTime().getCurrentValue(),
+        blinkingPdGreenTimer = new Timer(crossroads.getParameters().getLightParams().getPdBlinkingTime().getCurrentValue(),
                 new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent ae) {
@@ -172,12 +172,12 @@ public class CrossroadsGUI extends SimpleMoveFrame {
         if (state == LightState.BLINKING_ORANGE) {
             if (!isBlinkingAndOrange) {
                 isBlinkingAndOrange = true;
-                blinkingTimer.start();
+                blinkingTrOrangeTimer.start();
             }
             return;
         } else {
             isBlinkingAndOrange = false;
-            blinkingTimer.stop();
+            blinkingTrOrangeTimer.stop();
         }
 
         switch (axe) {
@@ -222,15 +222,15 @@ public class CrossroadsGUI extends SimpleMoveFrame {
         if (state == LightState.BLINKING_GREEN) {
             isBlinkingAndGreen = true;
             isNSAxeInIntermediateState = ((axe == Axe.NS_SN) ? true : false);
-            blinkingGreenTimer.start();
+            blinkingPdGreenTimer.start();
             return;
         }
         
         
         if ((isNSAxeInIntermediateState && axe == Axe.NS_SN) || (!isNSAxeInIntermediateState && axe == Axe.EW_WE)
-                && blinkingGreenTimer.isRunning()) {
+                && blinkingPdGreenTimer.isRunning()) {
             isNSAxeInIntermediateState = !isNSAxeInIntermediateState;
-            blinkingGreenTimer.stop();
+            blinkingPdGreenTimer.stop();
         }
         
         

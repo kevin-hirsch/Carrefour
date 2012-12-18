@@ -2,13 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package g34871.alg3g.rmi.view;
+package g34871.alg3g.rmi.project.view;
 
-import g34871.alg3g.rmi.common.crossroads.Axe;
-import g34871.alg3g.rmi.common.light.LightState;
-import g34871.alg3g.rmi.server.Crossroads;
-import g34871.alg3g.rmi.view.image.LightImage;
-import g34871.alg3g.rmi.view.image.PedestrianLightImage;
+import g34871.alg3g.rmi.project.common.crossroads.Axe;
+import g34871.alg3g.rmi.project.common.light.LightState;
+import g34871.alg3g.rmi.project.server.Crossroads;
+import g34871.alg3g.rmi.project.view.image.LightImage;
+import g34871.alg3g.rmi.project.view.image.PedestrianLightImage;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.HeadlessException;
@@ -63,7 +63,7 @@ public class PedestrianLightGUI extends LightGUI {
                 });
 
         isBlinkingAndGreen = false;
-        blinkingGreenTimer = new Timer(crossroads.getParameters().getLightParams().getGreenBlinkingTime().getCurrentValue(),
+        blinkingGreenTimer = new Timer(crossroads.getParameters().getLightParams().getPdBlinkingTime().getCurrentValue(),
                 new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent ae) {

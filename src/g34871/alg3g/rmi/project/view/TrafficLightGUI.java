@@ -2,13 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package g34871.alg3g.rmi.view;
+package g34871.alg3g.rmi.project.view;
 
-import g34871.alg3g.rmi.common.crossroads.Axe;
-import g34871.alg3g.rmi.common.light.LightState;
-import g34871.alg3g.rmi.server.Crossroads;
-import g34871.alg3g.rmi.view.image.LightImage;
-import g34871.alg3g.rmi.view.image.TrafficLightImage;
+import g34871.alg3g.rmi.project.common.crossroads.Axe;
+import g34871.alg3g.rmi.project.common.light.LightState;
+import g34871.alg3g.rmi.project.server.Crossroads;
+import g34871.alg3g.rmi.project.view.image.LightImage;
+import g34871.alg3g.rmi.project.view.image.TrafficLightImage;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,7 +42,7 @@ public class TrafficLightGUI extends LightGUI {
                 });
 
         isBlinkingAndOrange = false;
-        blinkingTimer = new Timer(crossroads.getParameters().getLightParams().getBlinkingTime().getCurrentValue(),
+        blinkingTimer = new Timer(crossroads.getParameters().getLightParams().getTrBlinkingTime().getCurrentValue(),
                 new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent ae) {
